@@ -1,20 +1,26 @@
+import { EntityValidationError } from "../../../shared/domain/validators/validation.error";
+import { Uuid } from "../../../shared/domain/value-objects/uuid.vo";
 import { Category } from "../category.entity";
-
-test('xpto', () => {
-    expect(1).toBe(1);
-})
 
 
 describe('Category Entity', () => {
+    let validateSpy: any;
+    
+    beforeEach(() => {
+        validateSpy = jest.spyOn(Category, 'validate');
+    });
+
     test('should create a new category', () => {
-        const category = new Category({
+        const category = Category.create({
             name: 'Category 1'
         });
-        expect(category.category_id).toBeUndefined();
+        expect(category.category_id).toBeInstanceOf(Uuid);
         expect(category.name).toBe('Category 1');
         expect(category.description).toBe(null);
         expect(category.is_active).toBe(true);
         expect(category.created_at).toBeInstanceOf(Date);
+
+        expect(validateSpy).toHaveBeenCalledTimes(1);
    
         const created_at = new Date();
 
@@ -25,7 +31,7 @@ describe('Category Entity', () => {
             created_at
         });
 
-        expect(category2.category_id).toBeUndefined();
+        expect(category2.category_id).toBeInstanceOf(Uuid);
         expect(category2.name).toBe('Category 2');
         expect(category2.description).toBe('Description 2');
         expect(category2.is_active).toBe(false);
@@ -34,37 +40,96 @@ describe('Category Entity', () => {
     })
 
     test('should change name', () => {
-        const category = new Category({
+        const category = Category.create({
             name: 'Category 1'
         });
-        category.name = 'Updated Category';
+        expect(validateSpy).toHaveBeenCalledTimes(1);
+        category.changeName('Updated Category');
         expect(category.name).toBe('Updated Category');
+        expect(validateSpy).toHaveBeenCalledTimes(2);
     });
 
     test('should change description', () => {
-        const category = new Category({
+        const category = Category.create({
             name: 'Category 1',
             description: 'Initial Description'
         });
-        category.description = 'Updated Description';
+        expect(validateSpy).toHaveBeenCalledTimes(1);
+        category.changeDescription('Updated Description');
         expect(category.description).toBe('Updated Description');
+        expect(validateSpy).toHaveBeenCalledTimes(2);
     });
 
     test('should activate category', () => {
-        const category = new Category({
+        const category = Category.create({
             name: 'Category 1',
             is_active: false
         });
-        category.is_active = true;
+        expect(validateSpy).toHaveBeenCalledTimes(1);
+        category.activate();
         expect(category.is_active).toBe(true);
+        expect(validateSpy).toHaveBeenCalledTimes(1);
     });
 
     test('should deactivate category', () => {
-        const category = new Category({
+        const category = Category.create({
             name: 'Category 1',
             is_active: true
         });
-        category.is_active = false;
+        expect(validateSpy).toHaveBeenCalledTimes(1);
+        category.deactivate();
         expect(category.is_active).toBe(false);
+        expect(validateSpy).toHaveBeenCalledTimes(1);
     });
-})
+
+
+    describe('category_id field', () => {
+        test('should create a new category with category_id', () => {
+            const category_id = new Uuid();
+            const category = new Category({
+                category_id,
+                name: 'Category 1'
+            });
+            expect(category.category_id).toBe(category_id);
+
+        });
+
+        test('should throw an error if category_id is not a valid uuid', () => {
+            expect(() => {
+                new Category({
+                    category_id: new Uuid('invalid-uuid'),
+                    name: 'Category 1'
+                });
+            }).toThrowError('ID must be a valid UUID');
+        });
+    });
+});
+
+describe('Category Validator', () => {
+
+    describe('Create command', () => {
+        expect(() => {
+            Category.create({
+                name: null
+            });
+        }).toThrow(
+            new EntityValidationError({
+                error: ['name should not be empty']
+            })
+        );
+
+        expect(() => 
+            Category.create({
+                name: null
+            })
+        ).containsErrorMessages({
+            name: [
+                "name must be shorter than or equal to 255 characters",
+                "name must be a string",
+                "name should not be empty",
+            ],
+        });
+
+    });
+
+});

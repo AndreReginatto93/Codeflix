@@ -23,14 +23,14 @@ describe("ValueObject", () => {
 
   it("should return false if the value object is null", () => {
     const valueObject1 = new StringValueObject("test");
-    const valueObject2 = null;
+    const valueObject2: any = null;
 
     expect(valueObject1.equals(valueObject2 as any)).toBe(false);
   });
 
   it("should return false if the value object is undefined", () => {
     const valueObject1 = new StringValueObject("test");
-    const valueObject2 = undefined;
+    const valueObject2: any = undefined;
 
     expect(valueObject1.equals(valueObject2 as any)).toBe(false);
   });
