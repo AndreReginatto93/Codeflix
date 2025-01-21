@@ -19,7 +19,7 @@ export type CategoryCreateProps = {
 }
 
 export class Category extends Entity{
-    get entiry_id(): ValueObject {
+    get entity_id(): ValueObject {
         return this.category_id;
     }
     category_id: Uuid;
