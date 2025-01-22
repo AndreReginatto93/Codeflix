@@ -35,4 +35,4 @@ export class CategoryInMemoryRepository
             ? super.applySort(items, sort, sort_dir)
             : super.applySort(items, "created_at", "desc");
     }
-}
+} 
