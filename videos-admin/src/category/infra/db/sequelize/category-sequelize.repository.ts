@@ -2,7 +2,7 @@ import { NotFoundError } from "../../../../shared/domain/errors/not-found.error"
 import { Uuid } from "../../../../shared/domain/value-objects/uuid.vo";
 import { Category } from "../../../domain/category.entity";
 import { CategorySearchParams, CategorySearchResult, ICategoryRepository } from "../../../domain/category.repository";
-import { CategoryModel } from "./category.models";
+import { CategoryModel } from "./category.model";
 import { Op } from "sequelize";
 
 export class CategorySequelizeRepository implements ICategoryRepository {
