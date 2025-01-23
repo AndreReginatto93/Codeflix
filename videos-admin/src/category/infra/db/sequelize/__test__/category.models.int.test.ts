@@ -22,7 +22,7 @@ describe('CategoryModel Integration Tests', () => {
 
         // Act
         const createdCategory = await CategoryModel.create({
-            category_id: categoryFake.entity_id,
+            category_id: categoryFake.entity_id.id,
             name: categoryFake.name,
             description: categoryFake.description,
             is_active: categoryFake.is_active,
