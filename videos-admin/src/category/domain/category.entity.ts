@@ -20,8 +20,8 @@ export type CategoryCreateProps = {
 }
 
 export class Category extends Entity{
-    get entity_id(): ValueObject {
-        return this.category_id;
+    get entity_id(): Uuid {
+        return this.category_id ;
     }
     category_id: Uuid;
     name: string;
@@ -61,7 +61,7 @@ export class Category extends Entity{
     deactivate(): void {
         this.is_active = false;
     }
-    static validate(entity: Category){
+    static validate(entity: Category){ 
         const validator = CategoryValidatorFactory.create();
         const isValid = validator.validate(entity);
         if (!isValid){
