@@ -112,23 +112,25 @@ describe('Category Validator', () => {
             Category.create({
                 name: null
             });
-        }).toThrow(
-            new EntityValidationError({
-                error: ['name should not be empty']
-            })
-        );
-
-        expect(() => 
-            Category.create({
-                name: null
-            })
-        ).containsErrorMessages({
+        }).containsErrorMessages([{
             name: [
                 "name must be shorter than or equal to 255 characters",
                 "name must be a string",
                 "name should not be empty",
             ],
-        });
+        }]);
+
+        expect(() => 
+            Category.create({
+                name: null
+            })
+        ).containsErrorMessages([{
+            name: [
+                "name must be shorter than or equal to 255 characters",
+                "name must be a string",
+                "name should not be empty",
+            ],
+        }]);
 
     });
 

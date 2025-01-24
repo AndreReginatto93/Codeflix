@@ -28,12 +28,12 @@ expect.extend({
                 return isValid();
             }
 
-            return assertContainsErrorMessages(validator.errors, received);
+            return assertContainsErrorMessages([validator.errors], received);
         }
     },
 });
 
-function assertContainsErrorMessages(expected: FieldsErrors, received: FieldsErrors) {
+function assertContainsErrorMessages(expected: FieldsErrors[], received: FieldsErrors) {
     const isMatch = expect.objectContaining(received).asymmetricMatch(expected);
     
     return isMatch
