@@ -123,7 +123,7 @@ describe('InMemorySearchableRepository Unit Tests', () => {
     });
   });
 
-  describe('applyPagination method', () => {
+  describe('applyPaginate method', () => {
     it('should paginate items', async () => {
       const items = [
         new StubEntity({ name: 'a', price: 5 }),
@@ -133,16 +133,16 @@ describe('InMemorySearchableRepository Unit Tests', () => {
         new StubEntity({ name: 'e', price: 5 }),
       ];
 
-      let itemsPaginated = await repository['applyPagination'](items, 1, 2);
+      let itemsPaginated = await repository['applyPaginate'](items, 1, 2);
       expect(itemsPaginated).toStrictEqual([items[0], items[1]]);
 
-      itemsPaginated = await repository['applyPagination'](items, 2, 2);
+      itemsPaginated = await repository['applyPaginate'](items, 2, 2);
       expect(itemsPaginated).toStrictEqual([items[2], items[3]]);
 
-      itemsPaginated = await repository['applyPagination'](items, 3, 2);
+      itemsPaginated = await repository['applyPaginate'](items, 3, 2);
       expect(itemsPaginated).toStrictEqual([items[4]]);
 
-      itemsPaginated = await repository['applyPagination'](items, 4, 2);
+      itemsPaginated = await repository['applyPaginate'](items, 4, 2);
       expect(itemsPaginated).toStrictEqual([]);
     });
   });

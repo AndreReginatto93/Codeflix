@@ -109,7 +109,7 @@ export abstract class InMemorySearchableRepository<
       props.sort,
       props.sort_dir,
     );
-    const itemsPaginated = this.applyPagination(
+    const itemsPaginated = this.applyPaginate(
       itemsSorted,
       props.page,
       props.per_page,
@@ -127,7 +127,7 @@ export abstract class InMemorySearchableRepository<
     filter: Filter | null,
   ): Promise<E[]>;
 
-  protected applyPagination(
+  protected applyPaginate(
     items: E[],
     page: SearchParams['page'],
     per_page: SearchParams['per_page'],

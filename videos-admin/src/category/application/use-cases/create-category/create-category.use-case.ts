@@ -1,32 +1,29 @@
-import { IUseCase } from "../../../../shared/application/use-case.interface";
-import { Category } from "../../../domain/category.entity";
-import { ICategoryRepository } from "../../../domain/category.repository";
-import { CategoryOutput } from "../common/category-output";
+import { IUseCase } from '../../../../shared/application/use-case.interface';
+import { EntityValidationError } from '../../../../shared/domain/validators/validation.error';
+import { Category } from '../../../domain/category.aggregate';
+import { ICategoryRepository } from '../../../domain/category.repository';
+import {
+  CategoryOutput,
+  CategoryOutputMapper,
+} from '../common/category-output';
+import { CreateCategoryInput } from './create-category.input';
 
-export class CreateCategoryUseCase implements IUseCase<CreateCategoryInput, CreateCategoryOutput> {
-  
-  constructor(private readonly categoryRepository: ICategoryRepository) {}
-  
-  async execute(data: CreateCategoryInput): Promise<CreateCategoryOutput> {
-    const category = Category.create(data);
+export class CreateCategoryUseCase
+  implements IUseCase<CreateCategoryInput, CreateCategoryOutput>
+{
+  constructor(private readonly categoryRepo: ICategoryRepository) {}
 
-    await this.categoryRepository.insert(category);
+  async execute(input: CreateCategoryInput): Promise<CreateCategoryOutput> {
+    const entity = Category.create(input);
 
-    return {
-        id: category.category_id.toString(),
-        name: category.name,
-        description: category.description,
-        is_active: category.is_active,
-        created_at: category.created_at
+    if (entity.notification.hasErrors()) {
+      throw new EntityValidationError(entity.notification.toJSON());
     }
+
+    await this.categoryRepo.insert(entity);
+
+    return CategoryOutputMapper.toOutput(entity);
   }
 }
-
-export type CreateCategoryInput = {
-    name: string;
-    description?: string | null;
-    is_active?: boolean;
-}
-
 
 export type CreateCategoryOutput = CategoryOutput;

@@ -1,16 +1,21 @@
-import { NotFoundError } from "../../../../shared/domain/errors/not-found.error";
-import { Uuid } from "../../../../shared/domain/value-objects/uuid.vo";
-import { IUseCase } from "../../../../shared/application/use-case.interface";
-import { Category } from "../../../domain/category.entity";
-import { ICategoryRepository } from "../../../domain/category.repository";
-import { CategoryOutput } from "../common/category-output";
+import { IUseCase } from '../../../../shared/application/use-case.interface';
+import { NotFoundError } from '../../../../shared/domain/errors/not-found.error';
+import { EntityValidationError } from '../../../../shared/domain/validators/validation.error';
+import { Category, CategoryId } from '../../../domain/category.aggregate';
+import { ICategoryRepository } from '../../../domain/category.repository';
+import {
+  CategoryOutput,
+  CategoryOutputMapper,
+} from '../common/category-output';
+import { UpdateCategoryInput } from './update-category.input';
 
-export class UpdateCategoryUseCase implements IUseCase<UpdateCategoryInput, UpdateCategoryOutput> {
-  
-  constructor(private readonly categoryRepo: ICategoryRepository) {}
-  
+export class UpdateCategoryUseCase
+  implements IUseCase<UpdateCategoryInput, UpdateCategoryOutput>
+{
+  constructor(private categoryRepo: ICategoryRepository) {}
+
   async execute(input: UpdateCategoryInput): Promise<UpdateCategoryOutput> {
-    const categoryId = new Uuid(input.id);
+    const categoryId = new CategoryId(input.id);
     const category = await this.categoryRepo.findById(categoryId);
 
     if (!category) {
@@ -31,25 +36,14 @@ export class UpdateCategoryUseCase implements IUseCase<UpdateCategoryInput, Upda
       category.deactivate();
     }
 
+    if (category.notification.hasErrors()) {
+      throw new EntityValidationError(category.notification.toJSON());
+    }
+
     await this.categoryRepo.update(category);
 
-    return {
-      id: category.category_id.toString(),
-      name: category.name,
-      description: category.description,
-      is_active: category.is_active,
-      created_at: category.created_at
-    }
+    return CategoryOutputMapper.toOutput(category);
   }
 }
-
-export type UpdateCategoryInput = {
-  id: string;
-  name?: string;
-  description?: string | null;
-  is_active?: boolean;
-  created_at?: Date;
-}
-
 
 export type UpdateCategoryOutput = CategoryOutput;
