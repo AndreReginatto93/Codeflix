@@ -125,8 +125,8 @@ export class CategorySequelizeRepository implements ICategoryRepository {
       }),
       ...(props.sort && this.sortableFields.includes(props.sort)
         ? { order: [[props.sort, props.sort_dir]] }
-          //{ order: this.formatSort(props.sort, props.sort_dir!) }
-        : { order: [['created_at', 'desc']] }),
+        : //{ order: this.formatSort(props.sort, props.sort_dir!) }
+          { order: [['created_at', 'desc']] }),
       offset,
       limit,
     });
