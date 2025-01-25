@@ -7,3 +7,13 @@ services:
     volumes:
       - .:/home/node/app
     command: sh -c "chmod +x docker-script/start.sh"
+
+  db:
+    image: mysql:8.0.30
+    environment:
+      - MYSQL_DATABASE=micro_videos
+      - MYSQL_ROOT_PASSWORD=root
+    tmpfs:
+      - /var/lib/mysql
+    security_opt:
+      - seccomp:unconfined
