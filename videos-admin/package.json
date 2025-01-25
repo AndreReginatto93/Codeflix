@@ -22,6 +22,7 @@
   },
   "dependencies": {
     "@nestjs/common": "^11.0.0",
+    "@nestjs/config": "^4.0.0",
     "@nestjs/core": "^11.0.0",
     "@nestjs/mapped-types": "*",
     "@nestjs/platform-express": "^11.0.0",
@@ -29,6 +30,7 @@
     "class-validator": "^0.14.1",
     "dotenv": "^16.4.7",
     "eventemitter2": "^6.4.9",
+    "joi": "^17.13.3",
     "lodash": "^4.17.21",
     "reflect-metadata": "^0.2.0",
     "rxjs": "^7.8.1",
@@ -80,18 +82,19 @@
       "^.+\\.(t|j)s$": "ts-jest"
     },
     "testEnvironment": "node",
-    "setupFilesAfterEnv": ["./core/shared/infra/testing/expect-helpers.ts"],
-
+    "setupFilesAfterEnv": [
+      "./core/shared/infra/testing/expect-helpers.ts"
+    ],
     "collectCoverage": true,
     "coverageProvider": "v8",
     "coverageDirectory": "../coverage",
     "coverageThreshold": {
-        "global": {
-            "statements": 80,
-            "branches": 80,
-            "functions": 80,
-            "lines": 80
-        }
+      "global": {
+        "statements": 80,
+        "branches": 80,
+        "functions": 80,
+        "lines": 80
+      }
     }
   }
 }
