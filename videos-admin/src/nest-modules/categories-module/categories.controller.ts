@@ -8,12 +8,11 @@ import {
   Delete,
 } from '@nestjs/common';
 import { UpdateCategoryDto } from './dto/update-category.dto';
-import { CategorySequelizeRepository } from '../core/category/infra/db/sequelize/category-sequelize.repository';
+import { CategorySequelizeRepository } from '../../core/category/infra/db/sequelize/category-sequelize.repository';
 
 @Controller('categories')
 export class CategoriesController {
   constructor(private categoryRepo: CategorySequelizeRepository) {
-    console.log(categoryRepo);
   }
 
   @Post()
