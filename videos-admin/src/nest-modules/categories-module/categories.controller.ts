@@ -10,7 +10,6 @@ import {
   ParseUUIDPipe,
   HttpCode,
   Query,
-  UseGuards,
 } from '@nestjs/common';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
@@ -21,7 +20,11 @@ import { GetCategoryUseCase } from '../../core/category/application/use-cases/ge
 import { ListCategoriesUseCase } from '../../core/category/application/use-cases/list-categories/list-categories.use-case';
 
 import { CategoryOutput } from '../../core/category/application/use-cases/common/category-output';
-import { CategoryPresenter } from './categories.presenter';
+import {
+  CategoryCollectionPresenter,
+  CategoryPresenter,
+} from './categories.presenter';
+import { SearchCategoriesDto } from './dto/search-categories.dto';
 
 @Controller('categories')
 export class CategoriesController {
@@ -46,11 +49,11 @@ export class CategoriesController {
     return CategoriesController.serialize(output);
   }
 
-  // @Get()
-  // async search(@Query() searchParamsDto: SearchCategoriesDto) {
-  //   const output = await this.listUseCase.execute(searchParamsDto);
-  //   return new CategoryCollectionPresenter(output);
-  // }
+  @Get()
+  async search(@Query() searchParamsDto: SearchCategoriesDto) {
+    const output = await this.listUseCase.execute(searchParamsDto);
+    return new CategoryCollectionPresenter(output);
+  }
 
   @Get(':id')
   async findOne(
